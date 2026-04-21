@@ -1,11 +1,11 @@
 body{
-    background-color:cadetblue;
-    color:white;
+    background-color:#355872;
+    color:#F7F8F0;
     font-family:'Courier New', Courier, monospace;
 }
 
 h1, h2, h3, h4, h5, h6{
-    color:darkolivegreen;
+    color:#F7F8F0;
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
     font-style: italic;
 }
@@ -14,7 +14,7 @@ h1, h2, h3, h4, h5, h6{
     padding:20px;
 }
 .sidebar{
-    background-color:darkolivegreen;
+    background-color:#7AAACE;
     width: 200px;
     height: 100%;
     left:0;
@@ -53,7 +53,7 @@ h1, h2, h3, h4, h5, h6{
 }
 .box-model{
     padding:15px;
-    background-color: lightblue;
-    border:5px solid darkolivegreen;
+    background-color: #9CD5FF;
+    border:5px solid #7AAACE;
     margin:20px;
 }
