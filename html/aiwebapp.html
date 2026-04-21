@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wordle Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f4f4f4;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, 60px);
+      grid-gap: 10px;
+    }
+
+    .cell {
+      width: 60px;
+      height: 60px;
+      border: 2px solid #ccc;
+      text-align: center;
+      line-height: 60px;
+      font-size: 24px;
+      text-transform: uppercase;
+      background-color: white;
+    }
+
+    .cell.correct {
+      background-color: #6aaa64;
+      border-color: #6aaa64;
+      color: white;
+    }
+
+    .cell.present {
+      background-color: #c9b458;
+      border-color: #c9b458;
+      color: white;
+    }
+
+    .cell.absent {
+      background-color: #787c7e;
+      border-color: #787c7e;
+      color: white;
+    }
+
+    #input-row {
+      margin-top: 20px;
+    }
+
+    #guess {
+      width: 200px;
+      padding: 10px;
+      font-size: 18px;
+    }
+
+    #submit, #play-again {
+      padding: 10px 20px;
+      font-size: 18px;
+    }
+
+    #play-again {
+      display: none;
+      margin-top: 20px;
+    }
+
+    #message {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+    <style>
+    .toplink a{
+    color:blue;
+}
+    .toplink a:hover{
+    background-color:#57575757;
+    border-radius:5px
+}
+        
+    </style>
+    <div class="toplink">
+        <a href="../index.html">Professional Page</a>
+    </div>
+
+
+  <h1>Wordle</h1>
+  <div class="grid" id="grid">
+    <!-- Grid cells will be dynamically created here -->
+  </div>
+  <div id="input-row">
+    <input type="text" id="guess" maxlength="5" placeholder="Enter a word">
+    <button id="submit">Submit</button>
+  </div>
+  <div id="message"></div>
+  <button id="play-again">Play Again</button>
+
+  <script>
+    // Comprehensive word list
+    const words = [
+      "about", "above", "actor", "apple", "angry", "agree", "alarm", "alike", "angel", "adopt", "beach", "bench", "berry", "black", "brave", "bread", "bring", "bright", "catch", "climb", "clean", "clear", "close", "cloud", "dance", "dream", "drive", "eagle", "earth", "empty", "equal", "every", "fancy", "fault", "flame", "flash", "focus", "force", "glass", "great", "green", "grape", "guard", "happy", "hobby", "horse", "house", "human", "light", "liver", "lucky", "mango", "match", "mount", "mouse", "music", "night", "noble", "noise", "north", "ocean", "peach", "pearl", "place", "plant", "power", "queen", "reach", "ready", "robot", "round", "scale", "shape", "shine", "small", "smart", "smoke", "smile", "solar", "spend", "stand", "stone", "sugar", "sunny", "table", "thank", "their", "tiger", "today", "trust", "urban", "value", "vocal", "voice", "waste", "water", "white", "woman", "world", "worry", "write", "young", "zebra"
+    ];
+
+    let targetWord = words[Math.floor(Math.random() * words.length)];
+    const maxAttempts = 6;
+    let currentAttempt = 0;
+
+    const grid = document.getElementById("grid");
+    const guessInput = document.getElementById("guess");
+    const submitButton = document.getElementById("submit");
+    const messageDiv = document.getElementById("message");
+    const playAgainButton = document.getElementById("play-again");
+
+    function resetGame() {
+      targetWord = words[Math.floor(Math.random() * words.length)];
+      currentAttempt = 0;
+      grid.innerHTML = "";
+      messageDiv.textContent = "";
+      guessInput.value = "";
+      submitButton.disabled = false;
+      playAgainButton.style.display = "none";
+      guessInput.style.display = "inline";
+      submitButton.style.display = "inline";
+
+      for (let i = 0; i < maxAttempts * 5; i++) {
+        const cell = document.createElement("div");
+        cell.classList.add("cell");
+        grid.appendChild(cell);
+      }
+      guessInput.focus();
+    }
+
+    // Initialize the grid
+    resetGame();
+
+    function handleGuessSubmission() {
+      const guess = guessInput.value.toLowerCase();
+
+      if (guess.length !== 5) {
+        messageDiv.textContent = "Please enter a 5-letter word.";
+        return;
+      }
+
+      if (currentAttempt >= maxAttempts) {
+        messageDiv.textContent = "Game over! You've used all attempts.";
+        return;
+      }
+
+      const startIdx = currentAttempt * 5;
+      for (let i = 0; i < 5; i++) {
+        const cell = grid.children[startIdx + i];
+        const letter = guess[i];
+
+        cell.textContent = letter;
+        if (letter === targetWord[i]) {
+          cell.classList.add("correct");
+        } else if (targetWord.includes(letter)) {
+          cell.classList.add("present");
+        } else {
+          cell.classList.add("absent");
+        }
+      }
+
+      currentAttempt++;
+      guessInput.value = "";
+
+      if (guess === targetWord) {
+        messageDiv.textContent = "Congratulations! You've guessed the word.";
+        submitButton.disabled = true;
+        guessInput.style.display = "none";
+        submitButton.style.display = "none";
+        playAgainButton.style.display = "inline";
+      } else if (currentAttempt === maxAttempts) {
+        messageDiv.textContent = `Game over! The word was "${targetWord}".`;
+        submitButton.disabled = true;
+        guessInput.style.display = "none";
+        submitButton.style.display = "none";
+        playAgainButton.style.display = "inline";
+      } else {
+        guessInput.focus();
+      }
+    }
+
+    submitButton.addEventListener("click", handleGuessSubmission);
+
+    guessInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        handleGuessSubmission();
+      }
+    });
+
+    playAgainButton.addEventListener("click", resetGame);
+  </script>
+</body>
+</html>
